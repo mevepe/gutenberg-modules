@@ -248,28 +248,28 @@ const ColumnsEdit = (props) => {
 
 	const { replaceInnerBlocks } = useDispatch('core/block-editor');
 
-	// if (hasInnerBlocks) {
-	// 	return <ColumnsEditContainerWrapper {...props} />;
-	// }
+	if (hasInnerBlocks) {
+		return <ColumnsEditContainerWrapper {...props} />;
+	}
 
 	return (
 		<__experimentalBlockVariationPicker
-			// icon={get(blockType, ['icon', 'src'])}
-			// label={get(blockType, ['title'])}
-			// variations={variations}
-			// onSelect={(nextVariation = defaultVariation) => {
-			// 	if (nextVariation.attributes) {
-			// 		props.setAttributes(nextVariation.attributes);
-			// 	}
-			// 	if (nextVariation.innerBlocks) {
-			// 		replaceInnerBlocks(
-			// 			props.clientId,
-			// 			createBlocksFromInnerBlocksTemplate(
-			// 				nextVariation.innerBlocks
-			// 			)
-			// 		);
-			// 	}
-			// }}
+			icon={get(blockType, ['icon', 'src'])}
+			label={get(blockType, ['title'])}
+			variations={variations}
+			onSelect={(nextVariation = defaultVariation) => {
+				if (nextVariation.attributes) {
+					props.setAttributes(nextVariation.attributes);
+				}
+				if (nextVariation.innerBlocks) {
+					replaceInnerBlocks(
+						props.clientId,
+						createBlocksFromInnerBlocksTemplate(
+							nextVariation.innerBlocks
+						)
+					);
+				}
+			}}
 			allowSkip
 		/>
 	);
