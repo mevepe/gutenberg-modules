@@ -1199,10 +1199,8 @@ var ColumnsEdit = function ColumnsEdit(props) {
     var _select = select('core/blocks'),
         __experimentalGetBlockVariations = _select.__experimentalGetBlockVariations,
         getBlockType = _select.getBlockType,
-        getBlockTypes = _select.getBlockTypes,
         __experimentalGetDefaultBlockVariation = _select.__experimentalGetDefaultBlockVariation;
 
-    console.log(getBlockTypes());
     return {
       blockType: getBlockType(name),
       defaultVariation: __experimentalGetDefaultBlockVariation(name, 'block'),
@@ -1215,34 +1213,28 @@ var ColumnsEdit = function ColumnsEdit(props) {
       hasInnerBlocks = _useSelect2.hasInnerBlocks,
       variations = _useSelect2.variations;
 
-  console.log(blockType);
-  console.log(defaultVariation);
-  console.log(hasInnerBlocks);
-  console.log(variations);
-
   var _useDispatch = Object(_wordpress_data__WEBPACK_IMPORTED_MODULE_9__["useDispatch"])('core/block-editor'),
-      replaceInnerBlocks = _useDispatch.replaceInnerBlocks; // if (hasInnerBlocks) {
-  // 	return <ColumnsEditContainerWrapper {...props} />;
-  // }
+      replaceInnerBlocks = _useDispatch.replaceInnerBlocks;
 
+  if (hasInnerBlocks) {
+    return Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_3__["createElement"])(ColumnsEditContainerWrapper, props);
+  }
 
-  return Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_3__["createElement"])(_wordpress_block_editor__WEBPACK_IMPORTED_MODULE_8__["__experimentalBlockVariationPicker"] // icon={get(blockType, ['icon', 'src'])}
-  // label={get(blockType, ['title'])}
-  // variations={variations}
-  // onSelect={(nextVariation = defaultVariation) => {
-  // 	if (nextVariation.attributes) {
-  // 		props.setAttributes(nextVariation.attributes);
-  // 	}
-  // 	if (nextVariation.innerBlocks) {
-  // 		replaceInnerBlocks(
-  // 			props.clientId,
-  // 			createBlocksFromInnerBlocksTemplate(
-  // 				nextVariation.innerBlocks
-  // 			)
-  // 		);
-  // 	}
-  // }}
-  , {
+  return Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_3__["createElement"])(_wordpress_block_editor__WEBPACK_IMPORTED_MODULE_8__["__experimentalBlockVariationPicker"], {
+    icon: Object(lodash__WEBPACK_IMPORTED_MODULE_5__["get"])(blockType, ['icon', 'src']),
+    label: Object(lodash__WEBPACK_IMPORTED_MODULE_5__["get"])(blockType, ['title']),
+    variations: variations,
+    onSelect: function onSelect() {
+      var nextVariation = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : defaultVariation;
+
+      if (nextVariation.attributes) {
+        props.setAttributes(nextVariation.attributes);
+      }
+
+      if (nextVariation.innerBlocks) {
+        replaceInnerBlocks(props.clientId, createBlocksFromInnerBlocksTemplate(nextVariation.innerBlocks));
+      }
+    },
     allowSkip: true
   });
 };

@@ -220,11 +220,8 @@ const ColumnsEdit = (props) => {
 			const {
 				__experimentalGetBlockVariations,
 				getBlockType,
-				getBlockTypes,
 				__experimentalGetDefaultBlockVariation,
 			} = select('core/blocks');
-
-			console.log(getBlockTypes());
 
 			return {
 				blockType: getBlockType(name),
@@ -240,11 +237,6 @@ const ColumnsEdit = (props) => {
 		},
 		[clientId, name]
 	);
-
-	console.log(blockType);
-	console.log(defaultVariation);
-	console.log(hasInnerBlocks);
-	console.log(variations);
 
 	const { replaceInnerBlocks } = useDispatch('core/block-editor');
 
