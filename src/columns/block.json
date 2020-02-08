@@ -1,0 +1,15 @@
+{
+	"name": "gutenberg-modules/columns",
+	"category": "layout",
+	"attributes": {
+		"verticalAlignment": {
+			"type": "string"
+		},
+		"backgroundColor": {
+			"type": "string"
+		},
+		"customBackgroundColor": {
+			"type": "string"
+		}
+	}
+}
