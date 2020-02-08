@@ -86,7 +86,7 @@ export default [
 			}, [] );
 
 			const migratedInnerBlocks = columns.map( ( columnBlocks ) =>
-				createBlock( 'core/column', {}, columnBlocks )
+				createBlock( 'gutenberg-modules/column', {}, columnBlocks )
 			);
 
 			return [ omit( attributes, [ 'columns' ] ), migratedInnerBlocks ];

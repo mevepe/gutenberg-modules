@@ -2,7 +2,7 @@
  * WordPress dependencies
  */
 import { __ } from '@wordpress/i18n';
-import { column as icon } from '@wordpress/icons';
+// import { column as icon } from '@wordpress/icons';
 
 /**
  * Internal dependencies
@@ -16,9 +16,9 @@ const { name } = metadata;
 export { metadata, name };
 
 export const settings = {
-	title: __( 'Column' ),
-	parent: [ 'core/columns' ],
-	icon,
+	title: __( 'Column 1' ),
+	parent: [ 'gutenberg-modules/columns' ],
+	icon: 'index-card',
 	description: __( 'A single column within a columns block.' ),
 	supports: {
 		inserter: false,

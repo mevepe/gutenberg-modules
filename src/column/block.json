@@ -1,5 +1,5 @@
 {
-	"name": "core/column",
+	"name": "gutenberg-modules/column",
 	"category": "common",
 	"attributes": {
 		"verticalAlignment": {

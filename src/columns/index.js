@@ -2,7 +2,7 @@
  * WordPress dependencies
  */
 import { __ } from '@wordpress/i18n';
-import { columns as icon } from '@wordpress/icons';
+//import { columns as icon } from '@wordpress/icons';
 
 /**
  * Internal dependencies
@@ -18,8 +18,8 @@ const { name } = metadata;
 export { metadata, name };
 
 export const settings = {
-	title: __( 'Columns' ),
-	icon,
+	title: __( 'Columns 1' ),
+	icon: 'index-card',
 	description: __(
 		'Add a block that displays content in multiple columns, then add whatever content blocks you’d like.'
 	),
@@ -31,7 +31,7 @@ export const settings = {
 	example: {
 		innerBlocks: [
 			{
-				name: 'core/column',
+				name: 'gutenberg-modules/column',
 				innerBlocks: [
 					{
 						name: 'core/paragraph',
@@ -61,7 +61,7 @@ export const settings = {
 				],
 			},
 			{
-				name: 'core/column',
+				name: 'gutenberg-modules/column',
 				innerBlocks: [
 					{
 						name: 'core/paragraph',

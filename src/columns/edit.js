@@ -17,7 +17,7 @@ import {
 	__experimentalBlockVariationPicker,
 	__experimentalUseColors,
 } from '@wordpress/block-editor';
-import { withDispatch, useDispatch, useSelect } from '@wordpress/data';
+import { withDispatch, useDispatch, useSelect, withSelect } from '@wordpress/data';
 import { createBlock } from '@wordpress/blocks';
 
 /**
@@ -34,67 +34,67 @@ import {
  * Allowed blocks constant is passed to InnerBlocks precisely as specified here.
  * The contents of the array should never change.
  * The array should contain the name of each block that is allowed.
- * In columns block, the only block we allow is 'core/column'.
+ * In columns block, the only block we allow is 'gutenberg-modules/column'.
  *
  * @constant
  * @type {string[]}
  */
-const ALLOWED_BLOCKS = [ 'core/column' ];
+const ALLOWED_BLOCKS = ['gutenberg-modules/column'];
 
-function ColumnsEditContainer( {
+function ColumnsEditContainer({
 	attributes,
 	className,
 	updateAlignment,
 	updateColumns,
 	clientId,
-} ) {
+}) {
 	const { verticalAlignment } = attributes;
 
 	const { count } = useSelect(
-		( select ) => {
+		(select) => {
 			return {
-				count: select( 'core/block-editor' ).getBlockCount( clientId ),
+				count: select('core/block-editor').getBlockCount(clientId),
 			};
 		},
-		[ clientId ]
+		[clientId]
 	);
 
 	const {
 		BackgroundColor,
 		InspectorControlsColorPanel,
-	} = __experimentalUseColors( [
+	} = __experimentalUseColors([
 		{ name: 'backgroundColor', className: 'has-background' },
-	] );
+	]);
 
-	const classes = classnames( className, {
-		[ `are-vertically-aligned-${ verticalAlignment }` ]: verticalAlignment,
-	} );
+	const classes = classnames(className, {
+		[`are-vertically-aligned-${verticalAlignment}`]: verticalAlignment,
+	});
 
 	return (
 		<>
 			<BlockControls>
 				<BlockVerticalAlignmentToolbar
-					onChange={ updateAlignment }
-					value={ verticalAlignment }
+					onChange={updateAlignment}
+					value={verticalAlignment}
 				/>
 			</BlockControls>
 			<InspectorControls>
 				<PanelBody>
 					<RangeControl
-						label={ __( 'Columns' ) }
-						value={ count }
-						onChange={ ( value ) => updateColumns( count, value ) }
-						min={ 2 }
-						max={ 6 }
+						label={__('Columns')}
+						value={count}
+						onChange={(value) => updateColumns(count, value)}
+						min={2}
+						max={6}
 					/>
 				</PanelBody>
 			</InspectorControls>
-			{ InspectorControlsColorPanel }
+			{InspectorControlsColorPanel}
 			<BackgroundColor>
-				<div className={ classes }>
+				<div className={classes}>
 					<InnerBlocks
 						templateLock="all"
-						allowedBlocks={ ALLOWED_BLOCKS }
+						allowedBlocks={ALLOWED_BLOCKS}
 					/>
 				</div>
 			</BackgroundColor>
@@ -103,7 +103,7 @@ function ColumnsEditContainer( {
 }
 
 const ColumnsEditContainerWrapper = withDispatch(
-	( dispatch, ownProps, registry ) => ( {
+	(dispatch, ownProps, registry) => ({
 		/**
 		 * Update all child Column blocks with a new vertical alignment setting
 		 * based on whatever alignment is passed in. This allows change to parent
@@ -111,21 +111,21 @@ const ColumnsEditContainerWrapper = withDispatch(
 		 *
 		 * @param {string} verticalAlignment the vertical alignment setting
 		 */
-		updateAlignment( verticalAlignment ) {
+		updateAlignment(verticalAlignment) {
 			const { clientId, setAttributes } = ownProps;
-			const { updateBlockAttributes } = dispatch( 'core/block-editor' );
-			const { getBlockOrder } = registry.select( 'core/block-editor' );
+			const { updateBlockAttributes } = dispatch('core/block-editor');
+			const { getBlockOrder } = registry.select('core/block-editor');
 
 			// Update own alignment.
-			setAttributes( { verticalAlignment } );
+			setAttributes({ verticalAlignment });
 
 			// Update all child Column Blocks to match
-			const innerBlockClientIds = getBlockOrder( clientId );
-			innerBlockClientIds.forEach( ( innerBlockClientId ) => {
-				updateBlockAttributes( innerBlockClientId, {
+			const innerBlockClientIds = getBlockOrder(clientId);
+			innerBlockClientIds.forEach((innerBlockClientId) => {
+				updateBlockAttributes(innerBlockClientId, {
 					verticalAlignment,
-				} );
-			} );
+				});
+			});
 		},
 
 		/**
@@ -135,21 +135,21 @@ const ColumnsEditContainerWrapper = withDispatch(
 		 * @param {number} previousColumns Previous column count.
 		 * @param {number} newColumns      New column count.
 		 */
-		updateColumns( previousColumns, newColumns ) {
+		updateColumns(previousColumns, newColumns) {
 			const { clientId } = ownProps;
-			const { replaceInnerBlocks } = dispatch( 'core/block-editor' );
-			const { getBlocks } = registry.select( 'core/block-editor' );
+			const { replaceInnerBlocks } = dispatch('core/block-editor');
+			const { getBlocks } = registry.select('core/block-editor');
 
-			let innerBlocks = getBlocks( clientId );
-			const hasExplicitWidths = hasExplicitColumnWidths( innerBlocks );
+			let innerBlocks = getBlocks(clientId);
+			const hasExplicitWidths = hasExplicitColumnWidths(innerBlocks);
 
 			// Redistribute available width for existing inner blocks.
 			const isAddingColumn = newColumns > previousColumns;
 
-			if ( isAddingColumn && hasExplicitWidths ) {
+			if (isAddingColumn && hasExplicitWidths) {
 				// If adding a new column, assign width to the new column equal to
 				// as if it were `1 / columns` of the total available space.
-				const newColumnWidth = toWidthPrecision( 100 / newColumns );
+				const newColumnWidth = toWidthPrecision(100 / newColumns);
 
 				// Redistribute in consideration of pending block insertion as
 				// constraining the available working width.
@@ -159,19 +159,19 @@ const ColumnsEditContainerWrapper = withDispatch(
 				);
 
 				innerBlocks = [
-					...getMappedColumnWidths( innerBlocks, widths ),
-					...times( newColumns - previousColumns, () => {
-						return createBlock( 'core/column', {
+					...getMappedColumnWidths(innerBlocks, widths),
+					...times(newColumns - previousColumns, () => {
+						return createBlock('gutenberg-modules/column', {
 							width: newColumnWidth,
-						} );
-					} ),
+						});
+					}),
 				];
-			} else if ( isAddingColumn ) {
+			} else if (isAddingColumn) {
 				innerBlocks = [
 					...innerBlocks,
-					...times( newColumns - previousColumns, () => {
-						return createBlock( 'core/column' );
-					} ),
+					...times(newColumns - previousColumns, () => {
+						return createBlock('gutenberg-modules/column');
+					}),
 				];
 			} else {
 				// The removed column will be the last of the inner blocks.
@@ -180,35 +180,35 @@ const ColumnsEditContainerWrapper = withDispatch(
 					previousColumns - newColumns
 				);
 
-				if ( hasExplicitWidths ) {
+				if (hasExplicitWidths) {
 					// Redistribute as if block is already removed.
 					const widths = getRedistributedColumnWidths(
 						innerBlocks,
 						100
 					);
 
-					innerBlocks = getMappedColumnWidths( innerBlocks, widths );
+					innerBlocks = getMappedColumnWidths(innerBlocks, widths);
 				}
 			}
 
-			replaceInnerBlocks( clientId, innerBlocks, false );
+			replaceInnerBlocks(clientId, innerBlocks, false);
 		},
-	} )
-)( ColumnsEditContainer );
+	})
+)(ColumnsEditContainer);
 
-const createBlocksFromInnerBlocksTemplate = ( innerBlocksTemplate ) => {
+const createBlocksFromInnerBlocksTemplate = (innerBlocksTemplate) => {
 	return map(
 		innerBlocksTemplate,
-		( [ name, attributes, innerBlocks = [] ] ) =>
+		([name, attributes, innerBlocks = []]) =>
 			createBlock(
 				name,
 				attributes,
-				createBlocksFromInnerBlocksTemplate( innerBlocks )
+				createBlocksFromInnerBlocksTemplate(innerBlocks)
 			)
 	);
 };
 
-const ColumnsEdit = ( props ) => {
+const ColumnsEdit = (props) => {
 	const { clientId, name } = props;
 	const {
 		blockType,
@@ -216,52 +216,60 @@ const ColumnsEdit = ( props ) => {
 		hasInnerBlocks,
 		variations,
 	} = useSelect(
-		( select ) => {
+		(select) => {
 			const {
 				__experimentalGetBlockVariations,
 				getBlockType,
+				getBlockTypes,
 				__experimentalGetDefaultBlockVariation,
-			} = select( 'core/blocks' );
+			} = select('core/blocks');
+
+			console.log(getBlockTypes());
 
 			return {
-				blockType: getBlockType( name ),
+				blockType: getBlockType(name),
 				defaultVariation: __experimentalGetDefaultBlockVariation(
 					name,
 					'block'
 				),
 				hasInnerBlocks:
-					select( 'core/block-editor' ).getBlocks( clientId ).length >
+					select('core/block-editor').getBlocks(clientId).length >
 					0,
-				variations: __experimentalGetBlockVariations( name, 'block' ),
+				variations: __experimentalGetBlockVariations(name, 'block'),
 			};
 		},
-		[ clientId, name ]
+		[clientId, name]
 	);
 
-	const { replaceInnerBlocks } = useDispatch( 'core/block-editor' );
+	console.log(blockType);
+	console.log(defaultVariation);
+	console.log(hasInnerBlocks);
+	console.log(variations);
 
-	if ( hasInnerBlocks ) {
-		return <ColumnsEditContainerWrapper { ...props } />;
-	}
+	const { replaceInnerBlocks } = useDispatch('core/block-editor');
+
+	// if (hasInnerBlocks) {
+	// 	return <ColumnsEditContainerWrapper {...props} />;
+	// }
 
 	return (
 		<__experimentalBlockVariationPicker
-			icon={ get( blockType, [ 'icon', 'src' ] ) }
-			label={ get( blockType, [ 'title' ] ) }
-			variations={ variations }
-			onSelect={ ( nextVariation = defaultVariation ) => {
-				if ( nextVariation.attributes ) {
-					props.setAttributes( nextVariation.attributes );
-				}
-				if ( nextVariation.innerBlocks ) {
-					replaceInnerBlocks(
-						props.clientId,
-						createBlocksFromInnerBlocksTemplate(
-							nextVariation.innerBlocks
-						)
-					);
-				}
-			} }
+			// icon={get(blockType, ['icon', 'src'])}
+			// label={get(blockType, ['title'])}
+			// variations={variations}
+			// onSelect={(nextVariation = defaultVariation) => {
+			// 	if (nextVariation.attributes) {
+			// 		props.setAttributes(nextVariation.attributes);
+			// 	}
+			// 	if (nextVariation.innerBlocks) {
+			// 		replaceInnerBlocks(
+			// 			props.clientId,
+			// 			createBlocksFromInnerBlocksTemplate(
+			// 				nextVariation.innerBlocks
+			// 			)
+			// 		);
+			// 	}
+			// }}
 			allowSkip
 		/>
 	);

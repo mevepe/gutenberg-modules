@@ -29,6 +29,9 @@ const registerBlock = ( block ) => {
 		return;
 	}
 	const { metadata, settings, name } = block;
+
+	console.log(name);
+
 	if ( metadata ) {
 		unstable__bootstrapServerSideBlockDefinitions( { [ name ]: metadata } );
 	}
